@@ -1,5 +1,5 @@
 //
-//  XCTAsyncTestCase.h
+//  XCTestCase+AsyncTesting.h
 //  AsyncXCTestingKit
 //
 //  Created by 小野 将司 on 12/03/17.
@@ -19,7 +19,7 @@ enum {
 typedef NSUInteger XCTAsyncTestCaseStatus;
 
 
-@interface XCTAsyncTestCase : XCTestCase
+@interface XCTestCase (AsyncTesting)
 
 - (void)waitForStatus:(XCTAsyncTestCaseStatus)status timeout:(NSTimeInterval)timeout;
 - (void)waitForTimeout:(NSTimeInterval)timeout;

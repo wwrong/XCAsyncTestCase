@@ -8,12 +8,12 @@ For questions or issues, please email [Vincil Bishop](https://github.com/premosy
 Install
 -------
 
-Drop `XCTAsyncTestCase.h` and `XCTAsyncTestCase.m` into your project.
+Add `XCTestCase+AsyncTesting.h` and `XCTestCase+AsyncTesting.m` into your project.
 
 Usage
 -----
 
-1. Subclass `XCTAsyncTestCase`
+1. Add `#import "XCTestCase+AsyncTesting.h"` to tests that need to be asynchronous.
 2. Create your test cases as usual
 3. Call `-waitForStatus:timeout:` or `-waitForTimeout:` after you start your asynchronous call
 4. Call `-notify:` in your callbacks

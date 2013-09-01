@@ -7,8 +7,8 @@
 //  Copyright (c) 2012年 AppBankGames Inc. All rights reserved.
 //
 
-#import "XCTAsyncTestCase.h"
+#import <XCTest/XCTest.h>
 
-@interface AsyncXCTestingKitTests : XCTAsyncTestCase
+@interface AsyncXCTestingKitTests : XCTestCase
 
 @end

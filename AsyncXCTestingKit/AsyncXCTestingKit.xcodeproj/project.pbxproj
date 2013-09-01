@@ -15,8 +15,8 @@
 		FA8CBC2C17D2C53C00B727A3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8CBC2B17D2C53C00B727A3 /* UIKit.framework */; };
 		FA8CBC2F17D2C53C00B727A3 /* libAsyncXCTestingKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8CBC1717D2C53B00B727A3 /* libAsyncXCTestingKit.a */; };
 		FA8CBC3517D2C53C00B727A3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FA8CBC3317D2C53C00B727A3 /* InfoPlist.strings */; };
-		FA8CBC4617D2C61B00B727A3 /* XCTAsyncTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8CBC4517D2C61B00B727A3 /* XCTAsyncTestCase.m */; };
-		FA8CBC4717D2C61B00B727A3 /* XCTAsyncTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8CBC4517D2C61B00B727A3 /* XCTAsyncTestCase.m */; };
+		FA8CBC4617D2C61B00B727A3 /* XCTestCase+AsyncTesting.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8CBC4517D2C61B00B727A3 /* XCTestCase+AsyncTesting.m */; };
+		FA8CBC4717D2C61B00B727A3 /* XCTestCase+AsyncTesting.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8CBC4517D2C61B00B727A3 /* XCTestCase+AsyncTesting.m */; };
 		FA8CBC4A17D2C63100B727A3 /* AsyncXCTestingKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8CBC4917D2C63100B727A3 /* AsyncXCTestingKitTests.m */; };
 		FA8CBC4B17D2C6AB00B727A3 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8CBC2817D2C53C00B727A3 /* XCTest.framework */; };
 /* End PBXBuildFile section */
@@ -55,8 +55,8 @@
 		FA8CBC2B17D2C53C00B727A3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		FA8CBC3217D2C53C00B727A3 /* AsyncXCTestingKitTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AsyncXCTestingKitTests-Info.plist"; sourceTree = "<group>"; };
 		FA8CBC3417D2C53C00B727A3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		FA8CBC4417D2C61B00B727A3 /* XCTAsyncTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCTAsyncTestCase.h; sourceTree = "<group>"; };
-		FA8CBC4517D2C61B00B727A3 /* XCTAsyncTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCTAsyncTestCase.m; sourceTree = "<group>"; };
+		FA8CBC4417D2C61B00B727A3 /* XCTestCase+AsyncTesting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XCTestCase+AsyncTesting.h"; sourceTree = "<group>"; };
+		FA8CBC4517D2C61B00B727A3 /* XCTestCase+AsyncTesting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XCTestCase+AsyncTesting.m"; sourceTree = "<group>"; };
 		FA8CBC4817D2C63100B727A3 /* AsyncXCTestingKitTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncXCTestingKitTests.h; sourceTree = "<group>"; };
 		FA8CBC4917D2C63100B727A3 /* AsyncXCTestingKitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncXCTestingKitTests.m; sourceTree = "<group>"; };
 		FAA938B417D2CCF800770AE8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -119,8 +119,8 @@
 		FA8CBC1C17D2C53B00B727A3 /* AsyncXCTestingKit */ = {
 			isa = PBXGroup;
 			children = (
-				FA8CBC4417D2C61B00B727A3 /* XCTAsyncTestCase.h */,
-				FA8CBC4517D2C61B00B727A3 /* XCTAsyncTestCase.m */,
+				FA8CBC4417D2C61B00B727A3 /* XCTestCase+AsyncTesting.h */,
+				FA8CBC4517D2C61B00B727A3 /* XCTestCase+AsyncTesting.m */,
 				FA8CBC1F17D2C53B00B727A3 /* AsyncXCTestingKit.h */,
 				FA8CBC2117D2C53B00B727A3 /* AsyncXCTestingKit.m */,
 				FA8CBC1D17D2C53B00B727A3 /* Supporting Files */,
@@ -237,7 +237,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA8CBC2217D2C53B00B727A3 /* AsyncXCTestingKit.m in Sources */,
-				FA8CBC4617D2C61B00B727A3 /* XCTAsyncTestCase.m in Sources */,
+				FA8CBC4617D2C61B00B727A3 /* XCTestCase+AsyncTesting.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,7 +245,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA8CBC4717D2C61B00B727A3 /* XCTAsyncTestCase.m in Sources */,
+				FA8CBC4717D2C61B00B727A3 /* XCTestCase+AsyncTesting.m in Sources */,
 				FA8CBC4A17D2C63100B727A3 /* AsyncXCTestingKitTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

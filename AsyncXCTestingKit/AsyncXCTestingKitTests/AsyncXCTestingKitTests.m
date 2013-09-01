@@ -8,6 +8,7 @@
 //
 
 #import "AsyncXCTestingKitTests.h"
+#import "XCTestCase+AsyncTesting.h"
 
 @implementation AsyncXCTestingKitTests
 
