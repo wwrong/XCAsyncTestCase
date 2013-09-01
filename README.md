@@ -1,22 +1,22 @@
 Install
 -------
 
-Drop `SenAsyncTestCase.h` and `SenAsyncTestCase.m` into your project.
+Drop `XCTAsyncTestCase.h` and `XCTAsyncTestCase.m` into your project.
 
 Usage
 -----
 
-1. Subclass `SenAsyncTestCase`
+1. Subclass `XCTAsyncTestCase`
 2. Create your test cases as usual
 3. Call `-waitForStatus:timeout:` or `-waitForTimeout:` after you start your asynchronous call
 4. Call `-notify:` in your callbacks
 
-See `AsyncSenTestingKitTests.m` for more information.
+See `AsyncXCTestingKitTests.m` for more information.
 
 Known Problems
 --------------
 
-Sometimes SenAsyncTestCase doesn't print any logs nor any errors when tests failed. Breakpoints doesn't work too. Looks like this is because of how SenTestingKit runs test cases... but not sure why.
+No known issues.
 
 LICENSE
 -------

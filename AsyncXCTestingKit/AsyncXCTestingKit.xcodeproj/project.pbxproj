@@ -59,6 +59,7 @@
 		FA8CBC4517D2C61B00B727A3 /* XCTAsyncTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCTAsyncTestCase.m; sourceTree = "<group>"; };
 		FA8CBC4817D2C63100B727A3 /* AsyncXCTestingKitTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncXCTestingKitTests.h; sourceTree = "<group>"; };
 		FA8CBC4917D2C63100B727A3 /* AsyncXCTestingKitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncXCTestingKitTests.m; sourceTree = "<group>"; };
+		FAA938B417D2CCF800770AE8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +89,7 @@
 		FA8CBC0E17D2C53B00B727A3 = {
 			isa = PBXGroup;
 			children = (
+				FAA938B417D2CCF800770AE8 /* README.md */,
 				FA8CBC1C17D2C53B00B727A3 /* AsyncXCTestingKit */,
 				FA8CBC3017D2C53C00B727A3 /* AsyncXCTestingKitTests */,
 				FA8CBC1917D2C53B00B727A3 /* Frameworks */,
