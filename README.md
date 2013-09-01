@@ -8,7 +8,7 @@ For questions or issues, please email [Vincil Bishop](https://github.com/premosy
 Install
 -------
 
-Add `XCTestCase+AsyncTesting.h` and `XCTestCase+AsyncTesting.m` into your project.
+Add `XCTestCase+AsyncTesting.h` and `XCTestCase+AsyncTesting.m` to your project.
 
 Usage
 -----
