@@ -1,3 +1,10 @@
+Overview
+-------
+
+Allows testing of asynchronous APIs much like [gh-unit](https://github.com/gabriel/gh-unit).
+
+For questions or issues, please email [Vincil Bishop](https://github.com/premosystems).
+
 Install
 -------
 
