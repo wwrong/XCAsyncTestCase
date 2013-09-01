@@ -1,14 +1,15 @@
 //
-//  AsyncSenTestingKitTests.m
-//  AsyncSenTestingKitTests
+//  AsyncXCTestingKitTests.m
+//  AsyncXCTestingKitTests
 //
 //  Created by 小野 将司 on 12/03/17.
+//  Modified for XCTest by Vincil Bishop
 //  Copyright (c) 2012年 AppBankGames Inc. All rights reserved.
 //
 
-#import "AsyncSenTestingKitTests.h"
+#import "AsyncXCTestingKitTests.h"
 
-@implementation AsyncSenTestingKitTests
+@implementation AsyncXCTestingKitTests
 
 - (void)setUp
 {
@@ -33,7 +34,7 @@
 
 - (void)testAsyncTimeoutsProperly_EXPECT_FAIL
 {
-    [self waitForStatus:SenAsyncTestCaseStatusSucceeded timeout:3.0];
+    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:3.0];
 }
 
 
@@ -44,19 +45,19 @@
 {
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.google.com"]];
     [NSURLConnection connectionWithRequest:request delegate:self];
-    [self waitForStatus:SenAsyncTestCaseStatusSucceeded timeout:10.0];
+    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:10.0];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
     NSLog(@"Request Finished!");
-    [self notify:SenAsyncTestCaseStatusSucceeded];
+    [self notify:XCTAsyncTestCaseStatusSucceeded];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     NSLog(@"Request failed with error: %@", error);
-    [self notify:SenAsyncTestCaseStatusFailed];
+    [self notify:XCTAsyncTestCaseStatusFailed];
 }
 
 
@@ -71,15 +72,15 @@
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                if (error) {
                                    NSLog(@"Request failed with error: %@", error);
-                                   [self notify:SenAsyncTestCaseStatusFailed];
+                                   [self notify:XCTAsyncTestCaseStatusFailed];
                                    return;
                                }
                                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                               STAssertEquals([httpResponse statusCode], 200, @"");
+                               XCTAssertEqual([httpResponse statusCode], 200, @"");
                                NSLog(@"Request Finished!");
-                               [self notify:SenAsyncTestCaseStatusSucceeded];
+                               [self notify:XCTAsyncTestCaseStatusSucceeded];
                            }];
-    [self waitForStatus:SenAsyncTestCaseStatusSucceeded timeout:10.0];
+    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:10.0];
     NSLog(@"Test Finished!");
 }
 
@@ -91,15 +92,15 @@
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                if (error) {
                                    NSLog(@"Request failed with error: %@", error);
-                                   [self notify:SenAsyncTestCaseStatusFailed];
+                                   [self notify:XCTAsyncTestCaseStatusFailed];
                                    return;
                                }
                                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                               STAssertEquals([httpResponse statusCode], 404, @"Expected Fail");
+                               XCTAssertEqual([httpResponse statusCode], 404, @"Expected Fail");
                                NSLog(@"Request Finished!");
-                               [self notify:SenAsyncTestCaseStatusSucceeded];
+                               [self notify:XCTAsyncTestCaseStatusSucceeded];
                            }];
-    [self waitForStatus:SenAsyncTestCaseStatusSucceeded timeout:10.0];
+    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:10.0];
     NSLog(@"Test Finished!");
 }
 
@@ -111,30 +112,31 @@
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                if (error) {
                                    NSLog(@"Request failed with error: %@", error);
-                                   [self notify:SenAsyncTestCaseStatusFailed];
+                                   [self notify:XCTAsyncTestCaseStatusFailed];
                                    return;
                                }
                                NSLog(@"Request Finished!");
-                               [self notify:SenAsyncTestCaseStatusCancelled];
+                               [self notify:XCTAsyncTestCaseStatusCancelled];
                            }];
-    [self waitForStatus:SenAsyncTestCaseStatusSucceeded timeout:10.0];
+    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:10.0];
     NSLog(@"Test Finished!");
 }
 
 - (void)testAsyncWithBlocksError
 {
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.there_should_be_no_such_domain_in_the_world.org"]];
+    //NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.there_should_be_no_such_domain_in_the_world.org"]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"file://tester"]];
     [NSURLConnection sendAsynchronousRequest:request
                                        queue:[NSOperationQueue mainQueue]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                if (error) {
                                    NSLog(@"Request failed with error: %@", error);
-                                   [self notify:SenAsyncTestCaseStatusFailed];
+                                   [self notify:XCTAsyncTestCaseStatusFailed];
                                    return;
                                }
-                               STFail(@"Must fail before this statement");
+                               XCTFail(@"Must fail before this statement");
                            }];
-    [self waitForStatus:SenAsyncTestCaseStatusFailed timeout:10.0];
+    [self waitForStatus:XCTAsyncTestCaseStatusFailed timeout:10.0];
 }
 
 - (void)testAsyncWithBlocksError_EXPECT_FAIL
@@ -145,9 +147,9 @@
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                // DOES fail on events while not notifying
                                // This results in waiting until timeout
-                               STFail(@"Must fail before this statement");
+                               XCTFail(@"Must fail before this statement");
                            }];
-    [self waitForStatus:SenAsyncTestCaseStatusFailed timeout:5.0];
+    [self waitForStatus:XCTAsyncTestCaseStatusFailed timeout:5.0];
 }
 
 
@@ -171,9 +173,9 @@
      */
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 2.0 * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^{
-        [self notify:SenAsyncTestCaseStatusSucceeded];
+        [self notify:XCTAsyncTestCaseStatusSucceeded];
     });
-    [self waitForStatus:SenAsyncTestCaseStatusSucceeded timeout:5.0];
+    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:5.0];
 }
 
 - (void)testAsyncPerformSelector
@@ -195,12 +197,12 @@
      
      */
     [self performSelector:@selector(___internal___testAsyncPerformSelector) withObject:nil afterDelay:2.0];
-    [self waitForStatus:SenAsyncTestCaseStatusSucceeded timeout:5.0];
+    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:5.0];
 }
 
 - (void)___internal___testAsyncPerformSelector
 {
-    [self notify:SenAsyncTestCaseStatusSucceeded];
+    [self notify:XCTAsyncTestCaseStatusSucceeded];
 }
 
 
