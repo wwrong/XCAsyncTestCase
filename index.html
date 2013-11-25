@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Xcasynctestcase : Asynchronous capable SenTestCase subclass" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Xcasynctestcase</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/premosystems/XCAsyncTestCase">View on GitHub</a>
+
+          <h1 id="project_title">Xcasynctestcase</h1>
+          <h2 id="project_tagline">Asynchronous capable SenTestCase subclass</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/premosystems/XCAsyncTestCase/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/premosystems/XCAsyncTestCase/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>
+<a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h2>
+
+<p>Allows testing of asynchronous APIs using XCTest much like <a href="https://github.com/gabriel/gh-unit">gh-unit</a>.</p>
+
+<p>For questions or issues, please email <a href="https://github.com/premosystems">Vincil Bishop</a>.</p>
+
+<h2>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h2>
+
+<p>Add <code>XCTestCase+AsyncTesting.h</code> and <code>XCTestCase+AsyncTesting.m</code> to your project.</p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<ol>
+<li>Add <code>#import "XCTestCase+AsyncTesting.h"</code> to tests that need to be asynchronous.</li>
+<li>Create your test cases as usual</li>
+<li>Call <code>-waitForStatus:timeout:</code> or <code>-waitForTimeout:</code> after you start your asynchronous call</li>
+<li>Call <code>-notify:</code> in your callbacks</li>
+</ol><p>See <code>AsyncXCTestingKitTests.m</code> for more information.</p>
+
+<h2>
+<a name="known-problems" class="anchor" href="#known-problems"><span class="octicon octicon-link"></span></a>Known Problems</h2>
+
+<p>No known issues.</p>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>LICENSE</h2>
+
+<p>This code is licensed under the MIT license: <a href="http://www.opensource.org/licenses/mit-license.php">http://www.opensource.org/licenses/mit-license.php</a></p>
+
+<p>Copyright (c) 2011 Masashi Ono.</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+
+<h2>
+<a name="keywords" class="anchor" href="#keywords"><span class="octicon octicon-link"></span></a>KEYWORDS</h2>
+
+<p>XCTest, XCTestCase, Asynchronous, XCode 5, Developer Preview, iOS 7, GHUnit, SenTest, Objective C</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Xcasynctestcase maintained by <a href="https://github.com/premosystems">premosystems</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
