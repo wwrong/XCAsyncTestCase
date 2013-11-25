@@ -3,7 +3,7 @@ Overview
 
 Allows testing of asynchronous APIs using XCTest much like [gh-unit](https://github.com/gabriel/gh-unit).
 
-For questions or issues, please email [Vincil Bishop](https://github.com/premosystems).
+For questions or issues, please email [premosystems](https://github.com/premosystems).
 
 Install
 -------
@@ -23,7 +23,7 @@ See `AsyncXCTestingKitTests.m` for more information.
 Known Problems
 --------------
 
-No known issues.
+* Tests hang when run under XCode build bots
 
 LICENSE
 -------
