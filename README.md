@@ -5,6 +5,8 @@ Allows testing of asynchronous APIs using XCTest much like [gh-unit](https://git
 
 For questions or issues, please email [premosystems](https://github.com/premosystems).
 
+Interested users should also check out [XCTAsyncTestCase](https://github.com/iheartradio/xctest-additions), another awesome async library for XCTest.
+
 Install
 -------
 
