@@ -27,6 +27,11 @@ Known Problems
 
 * Tests hang when run under XCode build bots
 
+Contributors
+------------
+
+A big thanks to [Rafiki270](https://github.com/rafiki270) for his contribution to the project. 
+
 LICENSE
 -------
 
