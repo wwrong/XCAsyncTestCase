@@ -10,7 +10,6 @@
 #import "XCTestCase+AsyncTesting.h"
 #import "objc/runtime.h"
 
-//static void *kLoopUntil_Key = "LoopUntil_Key";
 static void *kNotified_Key = "kNotified_Key";
 static void *kNotifiedStatus_Key = "kNotifiedStatus_Key";
 static void *kExpectedStatus_Key = "kExpectedStatus_Key";
