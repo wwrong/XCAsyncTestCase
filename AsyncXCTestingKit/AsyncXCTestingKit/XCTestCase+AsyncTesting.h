@@ -9,15 +9,13 @@
 
 #import <XCTest/XCTest.h>
 
-
-enum {
+typedef NS_ENUM(NSUInteger, XCTAsyncTestCaseStatus) {
     XCTAsyncTestCaseStatusUnknown = 0,
     XCTAsyncTestCaseStatusWaiting,
     XCTAsyncTestCaseStatusSucceeded,
     XCTAsyncTestCaseStatusFailed,
     XCTAsyncTestCaseStatusCancelled,
 };
-typedef NSUInteger XCTAsyncTestCaseStatus;
 
 
 @interface XCTestCase (AsyncTesting)
@@ -25,5 +23,5 @@ typedef NSUInteger XCTAsyncTestCaseStatus;
 - (void)waitForStatus:(XCTAsyncTestCaseStatus)status timeout:(NSTimeInterval)timeout;
 - (void)waitForTimeout:(NSTimeInterval)timeout;
 - (void)notify:(XCTAsyncTestCaseStatus)status;
-
+-(void)waitForStatus:(XCTAsyncTestCaseStatus)expectedStatus timeout:(NSTimeInterval)timeout withBlock:(void(^)(void))block;
 @end

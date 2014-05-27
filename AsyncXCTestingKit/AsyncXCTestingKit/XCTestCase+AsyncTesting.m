@@ -10,7 +10,6 @@
 #import "XCTestCase+AsyncTesting.h"
 #import "objc/runtime.h"
 
-static void *kLoopUntil_Key = "LoopUntil_Key";
 static void *kNotified_Key = "kNotified_Key";
 static void *kNotifiedStatus_Key = "kNotifiedStatus_Key";
 static void *kExpectedStatus_Key = "kExpectedStatus_Key";
@@ -18,21 +17,27 @@ static void *kExpectedStatus_Key = "kExpectedStatus_Key";
 @implementation XCTestCase (AsyncTesting)
 
 #pragma mark - Public
-
+-(void)waitForStatus:(XCTAsyncTestCaseStatus)expectedStatus timeout:(NSTimeInterval)timeout withBlock:(void(^)(void))block {
+    self.notified = NO;
+    self.expectedStatus = expectedStatus;
+    if (block) {
+        block();
+        NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:timeout];
+        [self waitUntilDate:loopUntil];
+        XCTAssertEqual(self.notifiedStatus, self.expectedStatus, @"Returned status %i did not match expected status %i", self.notifiedStatus, self.expectedStatus);
+    }
+    else {
+        XCTFail(@"No testing block to perform");
+    }
+}
 
 - (void)waitForStatus:(XCTAsyncTestCaseStatus)status timeout:(NSTimeInterval)timeout
 {
     self.notified = NO;
     self.expectedStatus = status;
-    self.loopUntil = [NSDate dateWithTimeIntervalSinceNow:timeout];
-    
-    NSDate *dt = [NSDate dateWithTimeIntervalSinceNow:0.1];
-    while (!self.notified && [self.loopUntil timeIntervalSinceNow] > 0) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
-                                 beforeDate:dt];
-        dt = [NSDate dateWithTimeIntervalSinceNow:0.1];
-    }
-    
+    NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:timeout];
+    [self waitUntilDate:loopUntil];
+
     // Only assert when notified. Do not assert when timed out
     // Fail if not notified
     if (self.notified) {
@@ -42,18 +47,21 @@ static void *kExpectedStatus_Key = "kExpectedStatus_Key";
     }
 }
 
-- (void)waitForTimeout:(NSTimeInterval)timeout
-{
-    self.notified = NO;
-    self.expectedStatus = XCTAsyncTestCaseStatusUnknown;
-    self.loopUntil = [NSDate dateWithTimeIntervalSinceNow:timeout];
-    
+-(void)waitUntilDate:(NSDate *)date {
     NSDate *dt = [NSDate dateWithTimeIntervalSinceNow:0.1];
-    while (!self.notified && [self.loopUntil timeIntervalSinceNow] > 0) {
+    while (!self.notified && [date timeIntervalSinceNow] > 0) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
                                  beforeDate:dt];
         dt = [NSDate dateWithTimeIntervalSinceNow:0.1];
     }
+}
+
+- (void)waitForTimeout:(NSTimeInterval)timeout
+{
+    self.notified = NO;
+    self.expectedStatus = XCTAsyncTestCaseStatusUnknown;
+    NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:timeout];
+    [self waitUntilDate:loopUntil];
 }
 
 - (void)notify:(XCTAsyncTestCaseStatus)status
@@ -77,17 +85,6 @@ static void *kExpectedStatus_Key = "kExpectedStatus_Key";
 }
 
 #pragma mark - Property Implementations -
-
-- (NSDate*) loopUntil
-{
-    return [self getAssociatedObject:kLoopUntil_Key];
-}
-
-- (void) setLoopUntil:(NSDate*)value
-{
-    [self setAssociatedObject:value key:kLoopUntil_Key];
-}
-
 - (BOOL) notified
 {
     NSNumber *valueNumber = [self getAssociatedObject:kNotified_Key];
