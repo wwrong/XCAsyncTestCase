@@ -24,7 +24,14 @@ static void *kExpectedStatus_Key = "kExpectedStatus_Key";
         block();
         NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:timeout];
         [self waitUntilDate:loopUntil];
-        XCTAssertEqual(self.notifiedStatus, self.expectedStatus, @"Returned status %i did not match expected status %i", self.notifiedStatus, self.expectedStatus);
+		
+		// Only assert when notified. Do not assert when timed out
+		// Fail if not notified
+		if (self.notified) {
+			XCTAssertEqual(self.notifiedStatus, self.expectedStatus, @"Returned status %u did not match expected status %u", self.notifiedStatus, self.expectedStatus);
+		} else {
+			XCTFail(@"Async test timed out.");
+		}
     }
     else {
         XCTFail(@"No testing block to perform");
