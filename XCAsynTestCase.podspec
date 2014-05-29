@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "XCAsyncTestCase"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "Asynchronous capable XCTestCase subclass"
 
   s.description  = <<-DESC
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
                    }
   s.author       = { "PremoSystems" => "info@premosystems.com" }
   
-  s.source       = { :git => "https://github.com/premosystems/XCAsyncTestCase.git", :commit => "2805fa2494cec170c4e66b586cdd242228ccd68d" }
+  s.source       = { :git => "https://github.com/premosystems/XCAsyncTestCase.git", :commit => "63ffbd87dbb3cac93604281cc5049037133ad337" }
 
   s.source_files = 'AsyncXCTestingKit/AsyncXCTestingKit/XCTestCase+AsyncTesting.{h,m}'
 
