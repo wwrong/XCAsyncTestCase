@@ -78,6 +78,15 @@ static void *kExpectedStatus_Key = "kExpectedStatus_Key";
     self.notified = YES;
 }
 
+- (void)notify:(XCTAsyncTestCaseStatus)status withDelay:(NSTimeInterval)delay {
+
+    __weak typeof(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [weakSelf notify:status];
+    });
+
+}
+
 #pragma nark - Object Association Helpers -
 
 - (void) setAssociatedObject:(id)anObject key:(void*)key
