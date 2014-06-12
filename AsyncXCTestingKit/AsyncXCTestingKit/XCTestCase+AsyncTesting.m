@@ -17,29 +17,23 @@ static void *kExpectedStatus_Key = "kExpectedStatus_Key";
 @implementation XCTestCase (AsyncTesting)
 
 #pragma mark - Public
--(void)waitForStatus:(XCTAsyncTestCaseStatus)expectedStatus timeout:(NSTimeInterval)timeout withBlock:(void(^)(void))block {
+- (void)waitForStatus:(XCTAsyncTestCaseStatus)expectedStatus timeout:(NSTimeInterval)timeout withBlock:(void(^)(void))block {
+    NSParameterAssert(block);
+    
     self.notified = NO;
     self.expectedStatus = expectedStatus;
-    if (block) {
-        block();
-        NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:timeout];
-        [self waitUntilDate:loopUntil];
-		
-		// Only assert when notified. Do not assert when timed out
-		// Fail if not notified
-		if (self.notified) {
-			XCTAssertEqual(self.notifiedStatus, self.expectedStatus, @"Returned status %u did not match expected status %u", self.notifiedStatus, self.expectedStatus);
-		} else {
-			XCTFail(@"Async test timed out.");
-		}
-    }
-    else {
-        XCTFail(@"No testing block to perform");
-    }
+
+    block();
+    NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:timeout];
+    [self waitUntilDate:loopUntil];
+    
+    // Only assert when notified. Do not assert when timed out
+    // Fail if not notified
+    [self raiseExceptionIfNeeded];
+  
 }
 
-- (void)waitForStatus:(XCTAsyncTestCaseStatus)status timeout:(NSTimeInterval)timeout
-{
+- (void)waitForStatus:(XCTAsyncTestCaseStatus)status timeout:(NSTimeInterval)timeout {
     self.notified = NO;
     self.expectedStatus = status;
     NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:timeout];
@@ -47,14 +41,33 @@ static void *kExpectedStatus_Key = "kExpectedStatus_Key";
 
     // Only assert when notified. Do not assert when timed out
     // Fail if not notified
-    if (self.notified) {
-        XCTAssertEqual(self.notifiedStatus, self.expectedStatus, @"Notified status does not match the expected status.");
-    } else {
-        XCTFail(@"Async test timed out.");
-    }
+    [self raiseExceptionIfNeeded];
 }
 
--(void)waitUntilDate:(NSDate *)date {
+- (void)raiseExceptionIfNeeded {
+    
+    NSException *exception = nil;
+    if (self.notified) {
+        
+        if (self.notifiedStatus != self.expectedStatus) {
+            
+            exception = [NSException exceptionWithName:@"ReturnStatusDidNotMatch"
+                                                reason:[NSString stringWithFormat:@"Returned status %lu did not match expected status %lu", self.notifiedStatus, self.expectedStatus]
+                                              userInfo:nil];
+        }
+    } else {
+        
+        exception = [NSException exceptionWithName:@"TimeOut"
+                                            reason:@"Async test timed out."
+                                          userInfo:nil];
+                
+    }
+    
+    [exception raise];
+    
+}
+
+- (void)waitUntilDate:(NSDate *)date {
     NSDate *dt = [NSDate dateWithTimeIntervalSinceNow:0.1];
     while (!self.notified && [date timeIntervalSinceNow] > 0) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
@@ -76,6 +89,15 @@ static void *kExpectedStatus_Key = "kExpectedStatus_Key";
     self.notifiedStatus = status;
     // self.notified must be set at the last of this method
     self.notified = YES;
+}
+
+- (void)notify:(XCTAsyncTestCaseStatus)status withDelay:(NSTimeInterval)delay {
+
+    __weak typeof(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [weakSelf notify:status];
+    });
+
 }
 
 #pragma nark - Object Association Helpers -

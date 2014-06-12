@@ -35,123 +35,71 @@
 
 - (void)testAsyncTimeoutsProperly_EXPECT_FAIL
 {
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:3.0];
+
+    XCTAssertThrows([self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:1.0], @"there should be an exception");
 }
 
 
 #pragma mark -
 
 
-- (void)testAsyncWithDelegate
+- (void)testAsyncWithMethods
 {
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.google.com"]];
-    [NSURLConnection connectionWithRequest:request delegate:self];
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:10.0];
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    NSLog(@"Request Finished!");
-    [self notify:XCTAsyncTestCaseStatusSucceeded];
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    NSLog(@"Request failed with error: %@", error);
-    [self notify:XCTAsyncTestCaseStatusFailed];
-}
-
-
-#pragma mark -
-
-
-- (void)testAsyncWithBlocks200
-{
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.google.com"]];
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-                               if (error) {
-                                   NSLog(@"Request failed with error: %@", error);
-                                   [self notify:XCTAsyncTestCaseStatusFailed];
-                                   return;
-                               }
-                               NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                               XCTAssertEqual([httpResponse statusCode], 200, @"");
-                               NSLog(@"Request Finished!");
-                               [self notify:XCTAsyncTestCaseStatusSucceeded];
-                           }];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [self helperForAsyncWithMethods];
+        [self notify:XCTAsyncTestCaseStatusSucceeded];
+    });
+    
     [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:10.0];
     NSLog(@"Test Finished!");
 }
 
+- (void)helperForAsyncWithMethods {
+    
+    [self notify:XCTAsyncTestCaseStatusSucceeded];
+}
 
-- (void)testAsyncWithBlocks200_EXPECT_FAIL
+#pragma mark -
+
+- (void)testAsyncWithBlocks
 {
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.google.com"]];
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-                               if (error) {
-                                   NSLog(@"Request failed with error: %@", error);
-                                   [self notify:XCTAsyncTestCaseStatusFailed];
-                                   return;
-                               }
-                               NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                               XCTAssertEqual([httpResponse statusCode], 404, @"Expected Fail");
-                               NSLog(@"Request Finished!");
-                               [self notify:XCTAsyncTestCaseStatusSucceeded];
-                           }];
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:10.0];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [self notify:XCTAsyncTestCaseStatusSucceeded];
+    });
+    
+    
+    XCTAssertThrows([self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:1.0], @"there should be an exception");
     NSLog(@"Test Finished!");
 }
 
 - (void)testAsyncWithBlocksStatusDoesntMatch_EXPECT_FAIL
 {
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.google.com"]];
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-                               if (error) {
-                                   NSLog(@"Request failed with error: %@", error);
-                                   [self notify:XCTAsyncTestCaseStatusFailed];
-                                   return;
-                               }
-                               NSLog(@"Request Finished!");
-                               [self notify:XCTAsyncTestCaseStatusCancelled];
-                           }];
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:10.0];
-    NSLog(@"Test Finished!");
-}
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 
-- (void)testAsyncWithBlocksError
-{
-    //NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.there_should_be_no_such_domain_in_the_world.org"]];
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"file://tester"]];
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-                               if (error) {
-                                   NSLog(@"Request failed with error: %@", error);
-                                   [self notify:XCTAsyncTestCaseStatusFailed];
-                                   return;
-                               }
-                               XCTFail(@"Must fail before this statement");
-                           }];
-    [self waitForStatus:XCTAsyncTestCaseStatusFailed timeout:10.0];
+        [self notify:XCTAsyncTestCaseStatusCancelled];
+    });
+
+
+    XCTAssertThrows([self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:10.0], @"there should be an exception");
+    NSLog(@"Test Finished!");
 }
 
 - (void)testAsyncWithBlocksError_EXPECT_FAIL
 {
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.there_should_be_no_such_domain_in_the_world.org"]];
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-                               // DOES fail on events while not notifying
-                               // This results in waiting until timeout
-                               XCTFail(@"Must fail before this statement");
-                           }];
-    [self waitForStatus:XCTAsyncTestCaseStatusFailed timeout:5.0];
+    
+    __block BOOL canceled = NO;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        XCTAssertTrue(canceled, @"the async operation wasnt canceled");
+    });
+    
+
+    XCTAssertThrows([self waitForStatus:XCTAsyncTestCaseStatusFailed timeout:0.1], @"there should be an exception");
+    canceled = YES;
 }
 
 
@@ -212,108 +160,75 @@
 
 - (void)testAsyncTimeoutsProperlyUsingBlock_EXPECT_FAIL
 {
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:3.0 withBlock:nil];
+    
+    XCTAssertThrows([self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:3.0 withBlock:nil], @"there should be an exception");
 }
 
 
 - (void)testAsyncWithDelegateUsingBlock
 {
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.google.com"]];
     [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:10.0 withBlock:^{
-        [NSURLConnection connectionWithRequest:request delegate:self];
+        [self helperForAsyncWithMethods];
     }];
 }
 
 - (void)testAsyncWithBlocks200UsingBlock
 {
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.google.com"]];
     [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:10.0 withBlock:^{
-        [NSURLConnection sendAsynchronousRequest:request
-                                           queue:[NSOperationQueue mainQueue]
-                               completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-                                   if (error) {
-                                       NSLog(@"Request failed with error: %@", error);
-                                       [self notify:XCTAsyncTestCaseStatusFailed];
-                                       return;
-                                   }
-                                   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                                   XCTAssertEqual([httpResponse statusCode], 200, @"");
-                                   NSLog(@"Request Finished!");
-                                   [self notify:XCTAsyncTestCaseStatusSucceeded];
-                               }];
+
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self notify:XCTAsyncTestCaseStatusSucceeded];
+        });
+        
     }];
 }
 
 - (void)testAsyncWithBlocks200UsingBlock_EXPECT_FAIL
 {
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.google.com"]];
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:10 withBlock:^{
+    XCTAssertThrows([self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:0.1 withBlock:^{
 
-        [NSURLConnection sendAsynchronousRequest:request
-                                           queue:[NSOperationQueue mainQueue]
-                               completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-                                   if (error) {
-                                       NSLog(@"Request failed with error: %@", error);
-                                       [self notify:XCTAsyncTestCaseStatusFailed];
-                                       return;
-                                   }
-                                   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                                   XCTAssertEqual([httpResponse statusCode], 404, @"Expected Fail");
-                                   NSLog(@"Request Finished!");
-                                   [self notify:XCTAsyncTestCaseStatusSucceeded];
-                               }];
-    }];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self notify:XCTAsyncTestCaseStatusSucceeded];
+        });
+    
+    }], @"there should be an exception");
 }
 
 - (void)testAsyncWithBlocksStatusDoesntMatchUsingBlock_EXPECT_FAIL
 {
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.google.com"]];
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:10.0 withBlock:^{
-
-        [NSURLConnection sendAsynchronousRequest:request
-                                           queue:[NSOperationQueue mainQueue]
-                               completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-                                   if (error) {
-                                       NSLog(@"Request failed with error: %@", error);
-                                       [self notify:XCTAsyncTestCaseStatusFailed];
-                                       return;
-                                   }
-                                   NSLog(@"Request Finished!");
-                                   [self notify:XCTAsyncTestCaseStatusCancelled];
-                               }];
-    }];
+    XCTAssertThrows([self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:10.0 withBlock:^{
+        
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self notify:XCTAsyncTestCaseStatusFailed];
+        });
+        
+    }], @"there should be an exception");
 }
 
 - (void)testAsyncWithBlocksErrorUsingBlock
 {
-    //NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.there_should_be_no_such_domain_in_the_world.org"]];
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"file://tester"]];
-    [self waitForStatus:XCTAsyncTestCaseStatusFailed timeout:10.0 withBlock:^{
-        [NSURLConnection sendAsynchronousRequest:request
-                                           queue:[NSOperationQueue mainQueue]
-                               completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-                                   if (error) {
-                                       NSLog(@"Request failed with error: %@", error);
-                                       [self notify:XCTAsyncTestCaseStatusFailed];
-                                       return;
-                                   }
-                                   XCTFail(@"Must fail before this statement");
-                               }];
-    }];
+    XCTAssertThrows([self waitForStatus:XCTAsyncTestCaseStatusFailed timeout:1.0 withBlock:^{
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self notify:XCTAsyncTestCaseStatusFailed];
+        });
+        
+    }], @"there should be an exception");
 }
 
 - (void)testAsyncWithBlocksErrorUsingBlock_EXPECT_FAIL
 {
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.there_should_be_no_such_domain_in_the_world.org"]];
-    [self waitForStatus:XCTAsyncTestCaseStatusFailed timeout:5.0 withBlock:^{
-        [NSURLConnection sendAsynchronousRequest:request
-                                           queue:[NSOperationQueue mainQueue]
-                               completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-                                   // DOES fail on events while not notifying
-                                   // This results in waiting until timeout
-                                   XCTFail(@"Must fail before this statement");
-                               }];
-    }];
+    
+    XCTAssertThrows([self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:10.0 withBlock:^{
+        
+        
+            [self notify:XCTAsyncTestCaseStatusFailed];
+        
+    }], @"there should be an exception");
+    
+    
 }
 
 - (void)testAsyncMainQueueUsingBlock
@@ -367,13 +282,27 @@
 /*
  The disabled "Expect Fail" tests below are here just for proof that the block based waitForStatus: method is better since it original method can cause unexpected failures where the correct status is set, but the notified property was reset to NO after the status had already been set.  This can happen when testing a block bacsed method that may or may not be asynchronous, but sets the status before the waitForStatus:timeout: method to be called.  The waitForStatus:timeout:withBlock: method works everywhere the waitForStatus:timeout method does and more.  And it has the benefit of being more readable.
  */
--(void)blockMethodThatReturnsImmediately:(void(^)(void))block {
+- (void)blockMethodThatReturnsImmediately:(void(^)(void))block {
     if (block) {
         block();
     }
 }
 
--(void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsSuccess {
+- (void)testBlockThatReturnImmediately {
+    
+    void (^testBlock)() = ^{
+        
+        [self notify:XCTAsyncTestCaseStatusSucceeded];
+    };
+    
+
+    testBlock();
+    XCTAssertThrows([self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:1.0], @"there should be an exception");
+    NSLog(@"Test Finished!");
+
+}
+
+- (void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsSuccess {
     [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:2.0 withBlock:^{
         [self blockMethodThatReturnsImmediately:^{
             [self notify:XCTAsyncTestCaseStatusSucceeded];
@@ -381,15 +310,26 @@
     }];
 }
 
--(void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsSuccess_EXPECT_FAIL {
+- (void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsSuccessWithDelay {
+    
+    [self blockMethodThatReturnsImmediately:^{
+        
+        [self notify:XCTAsyncTestCaseStatusSucceeded withDelay:0.1];
+    }];
+
+    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:10.0];
+    NSLog(@"Test Finished!");
+}
+
+- (void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsSuccess_EXPECT_FAIL {
     [self blockMethodThatReturnsImmediately:^{
         [self notify:XCTAsyncTestCaseStatusSucceeded];
     }];
-    [self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:2.0];
+    XCTAssertThrows([self waitForStatus:XCTAsyncTestCaseStatusSucceeded timeout:2.0], @"there should be an exception");
 }
 
 
--(void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsFailed {
+- (void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsFailed {
     [self waitForStatus:XCTAsyncTestCaseStatusFailed timeout:2.0 withBlock:^{
         [self blockMethodThatReturnsImmediately:^{
             [self notify:XCTAsyncTestCaseStatusFailed];
@@ -397,15 +337,16 @@
     }];
 }
 
--(void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsFailed_EXPECT_FAIL {
+- (void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsFailed_EXPECT_FAIL {
     [self blockMethodThatReturnsImmediately:^{
         [self notify:XCTAsyncTestCaseStatusFailed];
     }];
-    [self waitForStatus:XCTAsyncTestCaseStatusFailed timeout:2.0];
+
+    XCTAssertThrows([self waitForStatus:XCTAsyncTestCaseStatusFailed timeout:2.0], @"there should be an exception");
 }
 
 
--(void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsCanceled {
+- (void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsCanceled {
     [self waitForStatus:XCTAsyncTestCaseStatusCancelled timeout:2.0 withBlock:^{
         [self blockMethodThatReturnsImmediately:^{
             [self notify:XCTAsyncTestCaseStatusCancelled];
@@ -413,15 +354,16 @@
     }];
 }
 
--(void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsCanceled_EXPECT_FAIL {
+- (void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsCanceled_EXPECT_FAIL {
     [self blockMethodThatReturnsImmediately:^{
         [self notify:XCTAsyncTestCaseStatusCancelled];
     }];
-    [self waitForStatus:XCTAsyncTestCaseStatusCancelled timeout:2.0];
+
+    XCTAssertThrows([self waitForStatus:XCTAsyncTestCaseStatusCancelled timeout:2.0], @"there should be an exception");
 }
 
 
--(void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsWaiting {
+- (void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsWaiting {
     [self waitForStatus:XCTAsyncTestCaseStatusWaiting timeout:2.0 withBlock:^{
         [self blockMethodThatReturnsImmediately:^{
             [self notify:XCTAsyncTestCaseStatusWaiting];
@@ -429,15 +371,16 @@
     }];
 }
 
--(void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsWaiting_EXPECT_FAIL {
+- (void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsWaiting_EXPECT_FAIL {
     [self blockMethodThatReturnsImmediately:^{
         [self notify:XCTAsyncTestCaseStatusWaiting];
     }];
-    [self waitForStatus:XCTAsyncTestCaseStatusWaiting timeout:2.0];
+
+    XCTAssertThrows([self waitForStatus:XCTAsyncTestCaseStatusWaiting timeout:2.0], @"there should be an exception");
 }
 
 
--(void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsUnkown {
+- (void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsUnkown {
     [self waitForStatus:XCTAsyncTestCaseStatusUnknown timeout:2.0 withBlock:^{
         [self blockMethodThatReturnsImmediately:^{
             [self notify:XCTAsyncTestCaseStatusUnknown];
@@ -445,11 +388,12 @@
     }];
 }
 
--(void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsUnknown_EXPECT_FAIL {
+- (void)testSeeminglyAsyncBlockMethodThatReturnsImmediatelyStillReturnsUnknown_EXPECT_FAIL {
     [self blockMethodThatReturnsImmediately:^{
         [self notify:XCTAsyncTestCaseStatusUnknown];
     }];
-    [self waitForStatus:XCTAsyncTestCaseStatusUnknown timeout:2.0];
+
+    XCTAssertThrows([self waitForStatus:XCTAsyncTestCaseStatusUnknown timeout:2.0], @"there should be an exception");
 }
 
 @end
