@@ -288,7 +288,7 @@
     }
 }
 
-- (void)testgdgds {
+- (void)testBlockThatReturnImmediately {
     
     void (^testBlock)() = ^{
         
