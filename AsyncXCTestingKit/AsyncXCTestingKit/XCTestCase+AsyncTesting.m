@@ -72,10 +72,8 @@ static NSString * const kXCTestCaseAsyncTestingCategoryMethodPrefix = @"XAT_";
     NSParameterAssert(originalSelector);
     
     NSString *originalSelectorString = NSStringFromSelector(originalSelector);
-    //if ([originalSelectorString hasPrefix:@"_"] || [originalSelectorString hasPrefix:@"init"]) return NO;
+    if ([originalSelectorString hasPrefix:@"_"] || [originalSelectorString hasPrefix:@"init"]) return NO;
 
-
-    
     BOOL methodWasSuccessfullyAdded = NO;
     if (![originalSelectorString hasPrefix: kXCTestCaseAsyncTestingCategoryMethodPrefix ]) {
         
