@@ -8,6 +8,6 @@
     #import <Foundation/Foundation.h>
 #endif
 
-#ifndef XAT_SHORTHAND
-#define XAT_SHORTHAND
+#ifndef XCA_SHORTHAND
+#define XCA_SHORTHAND
 #endif

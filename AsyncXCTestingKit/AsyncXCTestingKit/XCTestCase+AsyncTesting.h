@@ -19,16 +19,16 @@ typedef NS_ENUM(NSUInteger, XCTAsyncTestCaseStatus) {
 
 @interface XCTestCase (AsyncTesting)
 
-- (void)XAT_waitForTimeout:(NSTimeInterval)timeout;
-- (void)XAT_waitForStatus:(XCTAsyncTestCaseStatus)status timeout:(NSTimeInterval)timeout;
-- (void)XAT_waitForStatus:(XCTAsyncTestCaseStatus)expectedStatus timeout:(NSTimeInterval)timeout withBlock:(void(^)(void))block;
+- (void)XCA_waitForTimeout:(NSTimeInterval)timeout;
+- (void)XCA_waitForStatus:(XCTAsyncTestCaseStatus)status timeout:(NSTimeInterval)timeout;
+- (void)XCA_waitForStatus:(XCTAsyncTestCaseStatus)expectedStatus timeout:(NSTimeInterval)timeout withBlock:(void(^)(void))block;
 
-- (void)XAT_notify:(XCTAsyncTestCaseStatus)status;
-- (void)XAT_notify:(XCTAsyncTestCaseStatus)status withDelay:(NSTimeInterval)delay;
+- (void)XCA_notify:(XCTAsyncTestCaseStatus)status;
+- (void)XCA_notify:(XCTAsyncTestCaseStatus)status withDelay:(NSTimeInterval)delay;
 
 @end
 
-#ifdef XAT_SHORTHAND
+#ifdef XCA_SHORTHAND
 @interface XCTestCase (AsyncTestingShortHand)
 
 - (void)waitForTimeout:(NSTimeInterval)timeout;

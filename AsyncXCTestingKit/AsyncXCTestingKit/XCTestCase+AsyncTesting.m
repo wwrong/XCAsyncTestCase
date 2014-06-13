@@ -14,13 +14,13 @@ static void *kNotified_Key = "kNotified_Key";
 static void *kNotifiedStatus_Key = "kNotifiedStatus_Key";
 static void *kExpectedStatus_Key = "kExpectedStatus_Key";
 
-static NSString * const kXCTestCaseAsyncTestingCategoryMethodPrefix = @"XAT_";
+static NSString * const kXCTestCaseAsyncTestingCategoryMethodPrefix = @"XCA_";
 
 @implementation XCTestCase (AsyncTesting)
 
 // Big thanks to Saul Mora (https://github.com/casademora)
 // for the shorthand implementation of MagicalRecord (https://github.com/magicalpanda/MagicalRecord)
-#ifdef XAT_SHORTHAND
+#ifdef XCA_SHORTHAND
 + (void)load {
 
     static dispatch_once_t onceToken;
@@ -34,7 +34,7 @@ static NSString * const kXCTestCaseAsyncTestingCategoryMethodPrefix = @"XAT_";
 + (void)swizzleNeededMethods {
 
     SEL sourceSelector = @selector(resolveInstanceMethod:);
-    SEL targetSelector = @selector(XAT_resolveInstanceMethod:);
+    SEL targetSelector = @selector(XCA_resolveInstanceMethod:);
     
     Method sourceClassMethod = class_getClassMethod(self, sourceSelector);
     Method targetClassMethod = class_getClassMethod(self, targetSelector);
@@ -54,10 +54,10 @@ static NSString * const kXCTestCaseAsyncTestingCategoryMethodPrefix = @"XAT_";
     
 }
 
-+ (BOOL)XAT_resolveInstanceMethod:(SEL)originalSelector {
++ (BOOL)XCA_resolveInstanceMethod:(SEL)originalSelector {
     NSParameterAssert(originalSelector);
     
-    BOOL instanceMethodWasResolved = [self XAT_resolveInstanceMethod:originalSelector];
+    BOOL instanceMethodWasResolved = [self XCA_resolveInstanceMethod:originalSelector];
     if (!instanceMethodWasResolved) {
         
         instanceMethodWasResolved = [self addShorthandMethodForNonPrefixedMethod:self selector:originalSelector];
@@ -94,7 +94,7 @@ static NSString * const kXCTestCaseAsyncTestingCategoryMethodPrefix = @"XAT_";
 
 
 #pragma mark - Public
-- (void)XAT_waitForStatus:(XCTAsyncTestCaseStatus)expectedStatus timeout:(NSTimeInterval)timeout withBlock:(void(^)(void))block {
+- (void)XCA_waitForStatus:(XCTAsyncTestCaseStatus)expectedStatus timeout:(NSTimeInterval)timeout withBlock:(void(^)(void))block {
     NSParameterAssert(block);
     NSParameterAssert(timeout > 0);
 
@@ -103,7 +103,7 @@ static NSString * const kXCTestCaseAsyncTestingCategoryMethodPrefix = @"XAT_";
     
     block();
     NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:timeout];
-    [self XAT_waitUntilDate:loopUntil];
+    [self XCA_waitUntilDate:loopUntil];
     
     // Only assert when notified. Do not assert when timed out
     // Fail if not notified
@@ -111,13 +111,13 @@ static NSString * const kXCTestCaseAsyncTestingCategoryMethodPrefix = @"XAT_";
     
 }
 
-- (void)XAT_waitForStatus:(XCTAsyncTestCaseStatus)status timeout:(NSTimeInterval)timeout {
+- (void)XCA_waitForStatus:(XCTAsyncTestCaseStatus)status timeout:(NSTimeInterval)timeout {
     NSParameterAssert(timeout > 0);
     
     self._notified = NO;
     self._expectedStatus = status;
     NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:timeout];
-    [self XAT_waitUntilDate:loopUntil];
+    [self XCA_waitUntilDate:loopUntil];
     
     // Only assert when notified. Do not assert when timed out
     // Fail if not notified
@@ -148,7 +148,7 @@ static NSString * const kXCTestCaseAsyncTestingCategoryMethodPrefix = @"XAT_";
     
 }
 
-- (void)XAT_waitUntilDate:(NSDate *)date {
+- (void)XCA_waitUntilDate:(NSDate *)date {
     NSParameterAssert(date);
     NSParameterAssert([date compare: [NSDate date]] == NSOrderedDescending);
     
@@ -160,28 +160,28 @@ static NSString * const kXCTestCaseAsyncTestingCategoryMethodPrefix = @"XAT_";
     }
 }
 
-- (void)XAT_waitForTimeout:(NSTimeInterval)timeout {
+- (void)XCA_waitForTimeout:(NSTimeInterval)timeout {
     NSParameterAssert(timeout > 0);
     
     self._notified = NO;
     self._expectedStatus = XCTAsyncTestCaseStatusUnknown;
     NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:timeout];
-    [self XAT_waitUntilDate:loopUntil];
+    [self XCA_waitUntilDate:loopUntil];
 }
 
-- (void)XAT_notify:(XCTAsyncTestCaseStatus)status {
+- (void)XCA_notify:(XCTAsyncTestCaseStatus)status {
     
     self._notifiedStatus = status;
     // self.notified must be set at the last of this method
     self._notified = YES;
 }
 
-- (void)XAT_notify:(XCTAsyncTestCaseStatus)status withDelay:(NSTimeInterval)delay {
+- (void)XCA_notify:(XCTAsyncTestCaseStatus)status withDelay:(NSTimeInterval)delay {
     NSParameterAssert(delay > 0);
 
     __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [weakSelf XAT_notify:status];
+        [weakSelf XCA_notify:status];
     });
     
 }
