@@ -7,3 +7,7 @@
 #ifdef __OBJC__
     #import <Foundation/Foundation.h>
 #endif
+
+#ifndef XAT_SHORTHAND
+#define XAT_SHORTHAND
+#endif

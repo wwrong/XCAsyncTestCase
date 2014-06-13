@@ -17,12 +17,26 @@ typedef NS_ENUM(NSUInteger, XCTAsyncTestCaseStatus) {
     XCTAsyncTestCaseStatusCancelled,
 };
 
-
 @interface XCTestCase (AsyncTesting)
 
-- (void)waitForStatus:(XCTAsyncTestCaseStatus)status timeout:(NSTimeInterval)timeout;
+- (void)XAT_waitForTimeout:(NSTimeInterval)timeout;
+- (void)XAT_waitForStatus:(XCTAsyncTestCaseStatus)status timeout:(NSTimeInterval)timeout;
+- (void)XAT_waitForStatus:(XCTAsyncTestCaseStatus)expectedStatus timeout:(NSTimeInterval)timeout withBlock:(void(^)(void))block;
+
+- (void)XAT_notify:(XCTAsyncTestCaseStatus)status;
+- (void)XAT_notify:(XCTAsyncTestCaseStatus)status withDelay:(NSTimeInterval)delay;
+
+@end
+
+#ifdef XAT_SHORTHAND
+@interface XCTestCase (AsyncTestingShortHand)
+
 - (void)waitForTimeout:(NSTimeInterval)timeout;
+- (void)waitForStatus:(XCTAsyncTestCaseStatus)status timeout:(NSTimeInterval)timeout;
+- (void)waitForStatus:(XCTAsyncTestCaseStatus)expectedStatus timeout:(NSTimeInterval)timeout withBlock:(void(^)(void))block;
+
 - (void)notify:(XCTAsyncTestCaseStatus)status;
 - (void)notify:(XCTAsyncTestCaseStatus)status withDelay:(NSTimeInterval)delay;
-- (void)waitForStatus:(XCTAsyncTestCaseStatus)expectedStatus timeout:(NSTimeInterval)timeout withBlock:(void(^)(void))block;
+
 @end
+#endif
