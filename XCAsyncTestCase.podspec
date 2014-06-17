@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name         = "XCAsyncTestCase"
-  s.version      = "0.0.3"
-  s.summary      = "Asynchronous capable XCTestCase subclass"
+  s.version      = "1.0.0"
+  s.summary      = "Asynchronous capable XCTestCase"
 
   s.description  = <<-DESC
                    Allows testing of asynchronous APIs using XCTest much like gh-unit.
