@@ -7,3 +7,7 @@
 #ifdef __OBJC__
     #import <Foundation/Foundation.h>
 #endif
+
+#ifndef XCA_SHORTHAND
+#define XCA_SHORTHAND
+#endif
