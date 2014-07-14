@@ -132,7 +132,7 @@ static NSString * const kXCTestCaseAsyncTestingCategoryMethodPrefix = @"XCA_";
         if (self._notifiedStatus != self._expectedStatus) {
             
             exception = [NSException exceptionWithName:@"ReturnStatusDidNotMatch"
-                                                reason:[NSString stringWithFormat:@"Returned status %lu did not match expected status %lu",
+                                                reason:[NSString stringWithFormat:@"Returned status %u did not match expected status %u",
                                                         self._notifiedStatus, self._expectedStatus]
                                               userInfo:nil];
         }
