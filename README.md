@@ -3,7 +3,7 @@ Overview
 
 Allows testing of asynchronous APIs using XCTest much like [gh-unit](https://github.com/gabriel/gh-unit).
 
-For questions or issues, please email [premosystems](https://github.com/premosystems).
+Pleasee see [issues](https://github.com/premosystems/XCAsyncTestCase/issues?page=1&state=open) for any problems.
 
 Interested users should also check out [XCTAsyncTestCase](https://github.com/iheartradio/xctest-additions), another awesome async library for XCTest.
 
@@ -12,25 +12,28 @@ Install
 
 Add `XCTestCase+AsyncTesting.h` and `XCTestCase+AsyncTesting.m` to your project.
 
+...or via [cocoapods](http://guides.cocoapods.org/using/getting-started.html) `pod 'XCAsyncTestCase'`
+
 Usage
 -----
 
-1. Add `#import "XCTestCase+AsyncTesting.h"` to tests that need to be asynchronous.
+1. Add `#import "XCTestCase+AsyncTesting.h"` to tests that need to be asynchronous. 
+- Optional: add `#define XCA_SHORTHAND` to your .pch file and enjoy methods without the XCA_ prefix. (new as of v1.0.0)
 2. Create your test cases as usual
-3. Call `-waitForStatus:timeout:` or `-waitForTimeout:` after you start your asynchronous call
-4. Call `-notify:` in your callbacks
+3. Call `-XCA_waitForStatus:timeout:` or `-XCA_waitForTimeout:` after you start your asynchronous call
+4. Call `-XCA_notify:` in your callbacks
 
 See `AsyncXCTestingKitTests.m` for more information.
-
-Known Problems
---------------
-
-* Tests hang when run under XCode build bots
 
 Contributors
 ------------
 
-A big thanks to [Rafiki270](https://github.com/rafiki270) for his contribution to the project. 
+A big thanks to these folks for their contributions to the project:
+
+* [CarlJ](https://github.com/carlj)
+* [Duemonk](https://github.com/duemunk)
+* [FelixLam](https://github.com/felixLam)
+* [Rafiki270](https://github.com/rafiki270) 
 
 LICENSE
 -------

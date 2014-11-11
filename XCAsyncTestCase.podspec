@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name         = "XCAsyncTestCase"
-  s.version      = "0.0.1"
-  s.summary      = "Asynchronous capable XCTestCase subclass"
+  s.version      = "1.0.0"
+  s.summary      = "Asynchronous capable XCTestCase"
 
   s.description  = <<-DESC
                    Allows testing of asynchronous APIs using XCTest much like gh-unit.
@@ -22,11 +22,12 @@ Pod::Spec.new do |s|
                    }
   s.author       = { "PremoSystems" => "info@premosystems.com" }
   
-  s.source       = { :git => "https://github.com/premosystems/XCAsyncTestCase.git", :commit => "2805fa2494cec170c4e66b586cdd242228ccd68d" }
+  s.source       = { :git => "https://github.com/premosystems/XCAsyncTestCase.git", :tag => s.version.to_s }
 
   s.source_files = 'AsyncXCTestingKit/AsyncXCTestingKit/XCTestCase+AsyncTesting.{h,m}'
 
   s.framework    = 'XCTest'
   
   s.requires_arc = true
+  s.ios.deployment_target = "5.0"
 end
