@@ -186,7 +186,7 @@ static NSString * const kXCTestCaseAsyncTestingCategoryMethodPrefix = @"XCA_";
     
 }
 
-#pragma nark - Object Association Helpers -
+#pragma mark - Object Association Helpers -
 
 - (void)_setAssociatedObject:(id)anObject key:(void*)key {
     NSParameterAssert(anObject);
